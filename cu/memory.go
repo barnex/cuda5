@@ -44,7 +44,6 @@ func (ptr DevicePtr) Free() {
 // Copies a number of bytes on the current device.
 // Requires unified addressing to be supported.
 // See also: MemcpyDtoD().
-// TODO(a): is actually an auto copy for device and/or host memory
 func Memcpy(dst, src DevicePtr, bytes int64) {
 	err := Result(C.cuMemcpy(C.CUdeviceptr(dst), C.CUdeviceptr(src), C.size_t(bytes)))
 	if err != SUCCESS {
@@ -165,20 +164,22 @@ func MemGetInfo() (free, total int64) {
 // Page-locks memory specified by the pointer and bytes.
 // The pointer and byte size must be aligned to the host page size (4KB)
 // See also: MemHostUnregister()
-func MemHostRegister(ptr unsafe.Pointer, bytes int64, flags MemHostRegisterFlag) {
-	err := Result(C.cuMemHostRegister(ptr, C.size_t(bytes), C.uint(flags)))
-	if err != SUCCESS {
-		panic(err)
-	}
-}
+// doesn't link with cuda6.5
+//func MemHostRegister(ptr unsafe.Pointer, bytes int64, flags MemHostRegisterFlag) {
+//	err := Result(C.cuMemHostRegister(ptr, C.size_t(bytes), C.uint(flags)))
+//	if err != SUCCESS {
+//		panic(err)
+//	}
+//}
 
 // Unmaps memory locked by MemHostRegister().
-func MemHostUnregister(ptr unsafe.Pointer) {
-	err := Result(C.cuMemHostUnregister(ptr))
-	if err != SUCCESS {
-		panic(err)
-	}
-}
+// doesn't link with cuda6.5
+//func MemHostUnregister(ptr unsafe.Pointer) {
+//	err := Result(C.cuMemHostUnregister(ptr))
+//	if err != SUCCESS {
+//		panic(err)
+//	}
+//}
 
 func MemAllocHost(bytes int64) unsafe.Pointer {
 	var p unsafe.Pointer
